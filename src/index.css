@@ -1,0 +1,51 @@
+/* ---------------------------------------------------- */
+/* 1. ПРАВИЛА @font-face для Yandex Sans */
+/* Файлы .ttf должны быть размещены в папке public/fonts/ */
+/* ---------------------------------------------------- */
+
+/* --- Yandex Sans Text (Для основного текста, Medium, Regular) --- */
+@font-face {
+    font-family: 'Yandex Sans Text';
+    src: url('/fonts/YandexSansText-Regular.ttf') format('truetype');
+    font-weight: 400; /* font-normal */
+    font-style: normal;
+    font-display: swap; 
+}
+@font-face {
+    font-family: 'Yandex Sans Text';
+    src: url('/fonts/YandexSansText-Medium.ttf') format('truetype');
+    font-weight: 500; /* font-medium (Для кнопки) */
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* --- Yandex Sans Display (Для крупных заголовков, Bold) --- */
+@font-face {
+    font-family: 'Yandex Sans Display';
+    src: url('/fonts/YandexSansDisplay-Bold.ttf') format('truetype');
+    font-weight: 700; /* font-bold / font-extrabold */
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ---------------------------------------------------- */
+/* 2. ДИРЕКТИВЫ TAILWIND CSS */
+/* ---------------------------------------------------- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------- */
+/* 3. ДРУГИЕ СТИЛИ (Стили для скрытия скроллбара) */
+/* ---------------------------------------------------- */
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
