@@ -260,18 +260,24 @@ const Logo = ({ size = 32 }) => (
   </svg>
 );
 
-// 1. TopNavBar (Верхняя панель с лого и профилем)
+// 1. TopNavBar (Верхняя панель с лого, водяным знаком и профилем)
 const TopNavBar = () => (
-  <div className="sticky top-0 z-50 bg-[#F0F9FF]/95 backdrop-blur-sm px-4 py-3 flex items-center justify-center shadow-sm border-b border-blue-100 relative">
+  <div className="sticky top-0 z-50 bg-[#F0F9FF]/95 backdrop-blur-sm px-4 py-2 flex flex-col items-center justify-center shadow-sm border-b border-blue-100 relative">
+    
+    {/* Watermark - Добавлено по запросу */}
+    <span className="text-[10px] text-gray-400 font-medium mb-1">
+      built by nikishks for non-commercial use
+    </span>
+
     {/* Logo Centered */}
     <div className="flex items-center gap-2">
       <span className="font-bold text-slate-800 text-xl tracking-tight">Лавка</span>
-      <Logo size={40} />
+      <Logo size={36} />
       <span className="font-bold text-slate-800 text-xl tracking-tight">Дейли</span>
     </div>
     
-    {/* Right Side Icons - Кнопка профиля */}
-    <button className="absolute right-4 flex items-center justify-center bg-white/50 w-8 h-8 rounded-full text-slate-600 active:scale-90 transition-transform">
+    {/* Right Side Icons - Кнопка профиля (Центрирована вертикально относительно контейнера) */}
+    <button className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center bg-white/50 w-8 h-8 rounded-full text-slate-600 active:scale-90 transition-transform">
       <User size={18} />
     </button>
   </div>
@@ -329,11 +335,8 @@ const DietPlanSelector = ({ selectedId, onSelect, dynamicCalories }) => {
       <div className="flex flex-col gap-3 h-[220px] overflow-y-auto snap-y snap-mandatory no-scrollbar rounded-2xl">
         {MOCK_DATA.dietPlans.map((plan) => {
           const isSelected = selectedId === plan.id;
-          
-          // ИСПРАВЛЕНИЕ: Всегда используем базовые калории из плана.
-          // Это убирает "скачок" цифр при клике.
+          // Используем базовые калории из плана
           const displayCalories = plan.macros.calories;
-          
           return (
             <div 
               key={plan.id}
