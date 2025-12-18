@@ -260,22 +260,80 @@ const Logo = ({ size = 32 }) => (
   </svg>
 );
 
-// 1. TopNavBar (Верхняя панель с лого и профилем)
-const TopNavBar = () => (
-  <div className="sticky top-0 z-50 bg-[#F0F9FF]/95 backdrop-blur-sm px-4 py-3 flex items-center justify-center shadow-sm border-b border-blue-100 relative">
-    {/* Logo Centered */}
-    <div className="flex items-center gap-2">
-      <span className="font-bold text-slate-800 text-xl tracking-tight">Лавка</span>
-      <Logo size={40} />
-      <span className="font-bold text-slate-800 text-xl tracking-tight">Дейли</span>
+// 1. TopNavBar (Верхняя панель с лого и профилем + меню пользователя)
+const TopNavBar = () => {
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen((prev) => !prev);
+  };
+
+  const closeUserMenu = () => {
+    setIsUserMenuOpen(false);
+  };
+
+  return (
+    <div className="sticky top-0 z-50 bg-[#F0F9FF]/95 backdrop-blur-sm px-4 py-3 flex items-center justify-center shadow-sm border-b border-blue-100 relative">
+      {/* Logo Centered */}
+      <div className="flex items-center gap-2">
+        <span className="font-bold text-slate-800 text-xl tracking-tight">Лавка</span>
+        <Logo size={40} />
+        <span className="font-bold text-slate-800 text-xl tracking-tight">Дейли</span>
+      </div>
+      
+      {/* Right Side Icons - Кнопка профиля */}
+      <button
+        onClick={toggleUserMenu}
+        className="absolute right-4 flex items-center justify-center bg-white/50 w-8 h-8 rounded-full text-slate-600 active:scale-90 transition-transform"
+      >
+        <User size={18} />
+      </button>
+
+      {/* Выпадающее меню пользователя */}
+      {isUserMenuOpen && (
+        <>
+          {/* Полупрозрачный фон для клика вне меню */}
+          <button
+            onClick={closeUserMenu}
+            className="fixed inset-0 z-40 bg-black/10 cursor-default"
+          />
+
+          <div className="absolute right-4 top-12 z-50 w-56 bg-white rounded-2xl shadow-xl border border-blue-100 py-2">
+            <div className="px-4 py-2 border-b border-blue-50">
+              <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">Аккаунт</p>
+              <p className="text-sm font-semibold text-slate-800">Иван Иванов</p>
+              <p className="text-xs text-slate-500">+7 999 123-45-67</p>
+            </div>
+
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 flex items-center gap-2"
+            >
+              <span>Профиль</span>
+            </button>
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 flex items-center gap-2"
+            >
+              <span>Мои заказы</span>
+            </button>
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 flex items-center gap-2"
+            >
+              <span>Способы оплаты</span>
+            </button>
+
+            <div className="border-t border-blue-50 mt-1 pt-1">
+              <button
+                className="w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-red-50"
+              >
+                Выйти
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
-    
-    {/* Right Side Icons - Кнопка профиля */}
-    <button className="absolute right-4 flex items-center justify-center bg-white/50 w-8 h-8 rounded-full text-slate-600 active:scale-90 transition-transform">
-      <User size={18} />
-    </button>
-  </div>
-);
+  );
+};
 
 // 2. QuickActionsBar (Панель быстрых действий)
 /**

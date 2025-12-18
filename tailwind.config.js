@@ -6,11 +6,10 @@ export default {
   ],
   theme: {
     extend: {
-      // Расширяем стандартные шрифты Tailwind
       fontFamily: {
-        // 'sans' - используем для основного текста
-        sans: ['Yandex Sans Text', 'sans-serif'],
-        // 'display' - новая утилита для крупных заголовков (например, "ГОТОВКА — ВСЁ.")
+        // Делаем Yandex Sans Display основным шрифтом во всём приложении
+        sans: ['Yandex Sans Display', 'sans-serif'],
+        // Оставляем утилиту 'display' на случай, если захотите использовать её отдельно
         display: ['Yandex Sans Display', 'sans-serif'], 
       },
       // Дополнительные цвета, чтобы соответствовать прототипу
