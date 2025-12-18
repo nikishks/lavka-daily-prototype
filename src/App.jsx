@@ -790,13 +790,18 @@ export default function App() {
             {visibleDishes.map(dish => (
               <MealCard key={dish.id} dish={dish} />
             ))}
-             {/* Заглушка, если выбранное кол-во блюд > чем доступно в mock-данных */}
-             {visibleDishes.length < selectedMealCount && (
-               <div className="bg-white/50 border-2 border-dashed border-blue-200 rounded-[24px] flex flex-col items-center justify-center p-4 text-blue-300 text-center text-xs h-full min-h-[200px]">
-                 <div className="mb-2 text-2xl">🧑‍🍳</div>
-                 Еще готовим...
-               </div>
-             )}
+             {/* Заглушки, чтобы количество карточек совпадало с выбранным числом блюд */}
+             {visibleDishes.length < selectedMealCount &&
+               Array.from({ length: selectedMealCount - visibleDishes.length }).map((_, idx) => (
+                 <div
+                   key={`placeholder-today-${idx}`}
+                   className="bg-white/50 border-2 border-dashed border-blue-200 rounded-[24px] flex flex-col items-center justify-center p-4 text-blue-300 text-center text-xs h-full min-h-[200px]"
+                 >
+                   <div className="mb-2 text-2xl">🧑‍🍳</div>
+                   Еще готовим...
+                 </div>
+               ))
+             }
           </div>
 
           {/* Tomorrow Menu */}
@@ -805,13 +810,18 @@ export default function App() {
             {visibleTomorrowDishes.map(dish => (
               <MealCard key={dish.id} dish={dish} />
             ))}
-             {/* Заглушка, если выбранное кол-во блюд > чем доступно в mock-данных */}
-             {visibleTomorrowDishes.length < selectedMealCount && (
-               <div className="bg-white/50 border-2 border-dashed border-blue-200 rounded-[24px] flex flex-col items-center justify-center p-4 text-blue-300 text-center text-xs h-full min-h-[200px]">
-                 <div className="mb-2 text-2xl">🧑‍🍳</div>
-                 Еще готовим...
-               </div>
-             )}
+             {/* Заглушки, чтобы количество карточек совпадало с выбранным числом блюд */}
+             {visibleTomorrowDishes.length < selectedMealCount &&
+               Array.from({ length: selectedMealCount - visibleTomorrowDishes.length }).map((_, idx) => (
+                 <div
+                   key={`placeholder-tomorrow-${idx}`}
+                   className="bg-white/50 border-2 border-dashed border-blue-200 rounded-[24px] flex flex-col items-center justify-center p-4 text-blue-300 text-center text-xs h-full min-h-[200px]"
+                 >
+                   <div className="mb-2 text-2xl">🧑‍🍳</div>
+                   Еще готовим...
+                 </div>
+               ))
+             }
           </div>
         </div>
 
