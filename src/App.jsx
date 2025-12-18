@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { User, MapPin, HelpCircle, Package } from 'lucide-react';
+import { User, MapPin, HelpCircle, Package, Phone, CreditCard, ChevronLeft, Percent } from 'lucide-react';
 
 // --- DATA LAYER (MOCKED) ---
 
@@ -616,11 +616,160 @@ const DeliveryZoneSection = () => {
   );
 };
 
-// 9. OrderSummaryBar (Закрепленный футер с итоговой информацией)
+// 9. PaymentSheet (Нижний экран "Адрес и оплата")
 /**
- * @param {{totalPrice: number, selectedMealCount: number, selectedDietPlan: DietPlan, dynamicMacros: {calories: number, protein: number, fat: number, carbs: number}}} props
+ * @param {{ 
+ *  totalPrice: number; 
+ *  selectedMealCount: number;
+ *  selectedDays: number;
+ *  onClose: () => void;
+ * }} props
  */
-const OrderSummaryBar = ({ totalPrice, selectedMealCount, selectedDietPlan, dynamicMacros }) => {
+const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose }) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
+      {/* Фон */}
+      <button
+        onClick={onClose}
+        className="absolute inset-0 bg-black/30"
+      />
+
+      {/* Нижний лист */}
+      <div className="relative z-10 w-full max-w-md bg-white rounded-t-3xl shadow-2xl pb-6">
+        {/* Хедер */}
+        <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-slate-100">
+          <button
+            onClick={onClose}
+            className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-slate-100 active:scale-95 transition"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <h2 className="font-bold text-lg text-slate-900">Адрес и оплата</h2>
+          <div className="w-8" />
+        </div>
+
+        <div className="px-4 mt-2 space-y-4 max-h-[70vh] overflow-y-auto no-scrollbar pb-2">
+          {/* Адрес */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full border-2 border-red-500" />
+              <div className="flex-1 flex items-center justify-between gap-2 py-2 border-b border-slate-100">
+                <span className="text-sm font-medium text-slate-900">
+                  Санкт-Петербургское шоссе, 109П
+                </span>
+                <span className="text-xs text-slate-400">Изменить</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 py-2 border-b border-slate-100">
+              <span className="text-slate-500 text-xl leading-none">💬</span>
+              <span className="text-sm text-slate-800">
+                телефон для связи 8&nbsp;999&nbsp;688&nbsp;55&nbsp;49
+              </span>
+            </div>
+
+            <div className="flex gap-3 pt-1">
+              <button className="flex-1 flex items-center justify-between px-3 py-3 bg-slate-50 rounded-2xl border border-slate-200">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex w-8 h-8 rounded-full bg-white border border-slate-200" />
+                  <span className="text-sm text-slate-900">Оставить у двери</span>
+                </div>
+              </button>
+              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-3 bg-[#FDE000]/80 rounded-2xl">
+                <Phone size={18} className="text-slate-900" />
+                <span className="text-sm font-medium text-slate-900">
+                  Позвонить, если чего-то нет
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Способы оплаты */}
+          <div className="space-y-3">
+            <h3 className="font-bold text-slate-900 text-lg">Способы оплаты</h3>
+            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+              <div className="min-w-[140px] px-3 py-3 bg-white rounded-2xl border-2 border-slate-900 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-7 h-7 rounded-full bg-slate-900" />
+                  <span className="text-[10px] font-semibold text-slate-600">MIR</span>
+                </div>
+                <span className="text-sm font-semibold text-slate-900">· 5828</span>
+              </div>
+              <div className="min-w-[140px] px-3 py-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div className="flex items-center gap-2 mb-2">
+                  <CreditCard size={16} className="text-slate-700" />
+                  <span className="text-xs font-semibold text-slate-800">Я.Карта</span>
+                </div>
+                <span className="text-xs text-slate-500">Открыть &gt;</span>
+              </div>
+              <div className="min-w-[140px] px-3 py-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div className="flex items-center gap-2 mb-2">
+                  <CreditCard size={16} className="text-slate-700" />
+                  <span className="text-xs font-semibold text-slate-800">MIR · 9039</span>
+                </div>
+                <span className="text-xs text-slate-500">Добавить</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Чаевые */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-slate-900 text-lg">Чаевые курьеру</h3>
+            <p className="text-xs text-slate-500">
+              Курьер получит всю сумму ваших чаевых
+            </p>
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+              {['Без чаевых', '3% 48₽', '5% 79₽', '10% 157₽', 'Другое'].map((label, idx) => (
+                <button
+                  key={label}
+                  className={`px-3 py-2 rounded-full text-sm border ${
+                    idx === 0
+                      ? 'border-slate-900 bg-white font-semibold'
+                      : 'border-slate-200 bg-slate-50 text-slate-700'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Промокоды */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-slate-900 text-lg">Промокоды</h3>
+            <div className="w-full h-px bg-slate-200" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-xl bg-slate-900 flex items-center justify-center">
+                  <Percent size={14} className="text-[#FDE000]" />
+                </div>
+                <span className="text-sm font-mono tracking-tight text-slate-900">
+                  LAVKA04YYH6QGTVKQ8JA
+                </span>
+              </div>
+              <span className="text-sm font-semibold text-red-500">−269,75₽</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Нижняя кнопка оплаты */}
+        <div className="px-4 pt-2">
+          <button className="w-full bg-[#FDE000] active:bg-yellow-400 text-black font-bold py-4 rounded-2xl text-lg shadow-lg shadow-yellow-400/40 transition-all transform active:scale-[0.98]">
+            Оплатить {totalPrice.toLocaleString('ru-RU')} ₽
+          </button>
+          <p className="mt-1 text-center text-xs text-slate-500 line-through">
+            {(totalPrice * 1.4).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 10. OrderSummaryBar (Закрепленный футер с итоговой информацией)
+/**
+ * @param {{totalPrice: number, selectedMealCount: number, selectedDietPlan: DietPlan, dynamicMacros: {calories: number, protein: number, fat: number, carbs: number}, onPayClick: () => void}} props
+ */
+const OrderSummaryBar = ({ totalPrice, selectedMealCount, selectedDietPlan, dynamicMacros, onPayClick }) => {
     // Используем динамические макронутриенты из выбранных блюд
     const { calories, protein, fat, carbs } = dynamicMacros;
 
@@ -648,7 +797,10 @@ const OrderSummaryBar = ({ totalPrice, selectedMealCount, selectedDietPlan, dyna
                 </div>
             </div>
 
-            <button className="w-full bg-[#FDE000] active:bg-yellow-400 text-black font-bold py-4 rounded-2xl text-lg shadow-lg shadow-yellow-400/40 transition-all transform active:scale-[0.98]">
+            <button
+              onClick={onPayClick}
+              className="w-full bg-[#FDE000] active:bg-yellow-400 text-black font-bold py-4 rounded-2xl text-lg shadow-lg shadow-yellow-400/40 transition-all transform active:scale-[0.98]"
+            >
                 К оплате
             </button>
             </div>
@@ -663,6 +815,7 @@ export default function App() {
   const [selectedRationId, setSelectedRationId] = useState('normal');
   const [selectedDays, setSelectedDays] = useState(3);
   const allowedDays = [3, 7, 14, 30];
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
   /** @type {DietPlan} */
   const selectedDietPlan = useMemo(() => {
@@ -832,13 +985,24 @@ export default function App() {
         <FAQSection />
       </div>
 
-      {/* 9. OrderSummaryBar - Итоговая панель с динамическим КБЖУ (Rule 5.1) */}
+      {/* 10. OrderSummaryBar - Итоговая панель с динамическим КБЖУ (Rule 5.1) */}
       <OrderSummaryBar 
         totalPrice={totalPrice} 
         selectedMealCount={selectedMealCount}
         selectedDietPlan={selectedDietPlan}
         dynamicMacros={dynamicMacros}
+        onPayClick={() => setIsPaymentOpen(true)}
       />
+
+      {/* 9. PaymentSheet - нижний экран "Адрес и оплата" */}
+      {isPaymentOpen && (
+        <PaymentSheet
+          totalPrice={totalPrice}
+          selectedMealCount={selectedMealCount}
+          selectedDays={selectedDays}
+          onClose={() => setIsPaymentOpen(false)}
+        />
+      )}
     </div>
   );
 }
