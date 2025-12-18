@@ -628,13 +628,13 @@ const DeliveryZoneSection = () => {
  */
 const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose, onPay }) => {
   const [address, setAddress] = useState('Санкт-Петербургское шоссе, 109литО');
-  const [contact, setContact] = useState('телефон для связи 8 999 688 55 49');
+  const [contact, setContact] = useState('');
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
   const [callIfMissing, setCallIfMissing] = useState(true);
   const [selectedPaymentIndex, setSelectedPaymentIndex] = useState(0);
   const [selectedTipIndex, setSelectedTipIndex] = useState(0);
-  const [promo, setPromo] = useState('LAVKA04YYH6QGTVKQ8JA');
-  const [promoApplied, setPromoApplied] = useState(true);
+  const [promo, setPromo] = useState('');
+  const [promoApplied, setPromoApplied] = useState(false);
 
   const rawTotal = promoApplied ? Math.round(totalPrice / 0.8) : totalPrice;
   const discountAmount = promoApplied ? rawTotal - totalPrice : 0;
