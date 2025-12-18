@@ -3,28 +3,27 @@
 /* Файлы .ttf должны быть размещены в папке public/fonts/ */
 /* ---------------------------------------------------- */
 
-/* --- Yandex Sans Text (Для основного текста, Medium, Regular) --- */
+/* --- Yandex Sans Display (основной шрифт интерфейса) --- */
 @font-face {
-    font-family: 'Yandex Sans Text';
-    src: url('/fonts/YandexSansText-Regular.ttf') format('truetype');
-    font-weight: 400; /* font-normal */
+    font-family: 'Yandex Sans Display';
+    src: url('/fonts/YandexSansDisplay-Regular.ttf') format('truetype');
+    font-weight: 400; /* обычный текст */
     font-style: normal;
-    font-display: swap; 
+    font-display: swap;
 }
 @font-face {
-    font-family: 'Yandex Sans Text';
-    src: url('/fonts/YandexSansText-Medium.ttf') format('truetype');
-    font-weight: 500; /* font-medium (Для кнопки) */
+    font-family: 'Yandex Sans Display';
+    src: url('/fonts/YandexSansDisplay-Bold.ttf') format('truetype');
+    font-weight: 700; /* жирный текст / заголовки */
     font-style: normal;
     font-display: swap;
 }
 
-
-/* --- Yandex Sans Display (Для крупных заголовков, Bold) --- */
+/* --- Yandex Sans Text (доп. жирный текст при необходимости) --- */
 @font-face {
-    font-family: 'Yandex Sans Display';
-    src: url('/fonts/YandexSansDisplay-Bold.ttf') format('truetype');
-    font-weight: 700; /* font-bold / font-extrabold */
+    font-family: 'Yandex Sans Text';
+    src: url('/fonts/YandexSansText-Bold.ttf') format('truetype');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
