@@ -623,9 +623,22 @@ const DeliveryZoneSection = () => {
  *  selectedMealCount: number;
  *  selectedDays: number;
  *  onClose: () => void;
+ *  onPay: () => void;
  * }} props
  */
-const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose }) => {
+const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose, onPay }) => {
+  const [address, setAddress] = useState('Санкт-Петербургское шоссе, 109литО');
+  const [contact, setContact] = useState('телефон для связи 8 999 688 55 49');
+  const [leaveAtDoor, setLeaveAtDoor] = useState(false);
+  const [callIfMissing, setCallIfMissing] = useState(true);
+  const [selectedPaymentIndex, setSelectedPaymentIndex] = useState(0);
+  const [selectedTipIndex, setSelectedTipIndex] = useState(0);
+  const [promo, setPromo] = useState('LAVKA04YYH6QGTVKQ8JA');
+  const [promoApplied, setPromoApplied] = useState(true);
+
+  const rawTotal = promoApplied ? Math.round(totalPrice / 0.8) : totalPrice;
+  const discountAmount = promoApplied ? rawTotal - totalPrice : 0;
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       {/* Фон */}
@@ -649,35 +662,66 @@ const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose }) 
         </div>
 
         <div className="px-4 mt-2 space-y-4 max-h-[70vh] overflow-y-auto no-scrollbar pb-2">
-          {/* Адрес */}
+          {/* Адрес и контакт */}
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 rounded-full border-2 border-red-500" />
-              <div className="flex-1 flex items-center justify-between gap-2 py-2 border-b border-slate-100">
-                <span className="text-sm font-medium text-slate-900">
-                  Санкт-Петербургское шоссе, 109П
-                </span>
-                <span className="text-xs text-slate-400">Изменить</span>
+              <div className="flex-1 py-1 border-b border-slate-100">
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full bg-transparent text-sm font-medium text-slate-900 placeholder-slate-400 outline-none"
+                  placeholder="Введите адрес доставки"
+                />
               </div>
             </div>
             <div className="flex items-center gap-3 py-2 border-b border-slate-100">
               <span className="text-slate-500 text-xl leading-none">💬</span>
-              <span className="text-sm text-slate-800">
-                телефон для связи 8&nbsp;999&nbsp;688&nbsp;55&nbsp;49
-              </span>
+              <input
+                type="text"
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                className="flex-1 bg-transparent text-sm text-slate-800 placeholder-slate-400 outline-none"
+                placeholder="Телефон или комментарий для курьера"
+              />
             </div>
 
             <div className="flex gap-3 pt-1">
-              <button className="flex-1 flex items-center justify-between px-3 py-3 bg-slate-50 rounded-2xl border border-slate-200">
+              <button
+                type="button"
+                onClick={() => setLeaveAtDoor((v) => !v)}
+                className={`flex-1 flex items-center justify-between px-3 py-3 rounded-2xl border ${
+                  leaveAtDoor
+                    ? 'bg-slate-900 border-slate-900 text-white'
+                    : 'bg-slate-50 border-slate-200 text-slate-900'
+                }`}
+              >
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex w-8 h-8 rounded-full bg-white border border-slate-200" />
-                  <span className="text-sm text-slate-900">Оставить у двери</span>
+                  <span
+                    className={`inline-flex w-8 h-5 rounded-full border transition-colors ${
+                      leaveAtDoor ? 'border-transparent bg-[#FDE000]' : 'border-slate-300 bg-white'
+                    }`}
+                  >
+                    <span
+                      className={`h-4 w-4 rounded-full bg-white shadow transform transition-transform ${
+                        leaveAtDoor ? 'translate-x-3' : 'translate-x-0'
+                      }`}
+                    />
+                  </span>
+                  <span className="text-sm">Оставить у двери</span>
                 </div>
               </button>
-              <button className="flex-1 flex items-center justify-center gap-2 px-3 py-3 bg-[#FDE000]/80 rounded-2xl">
+              <button
+                type="button"
+                onClick={() => setCallIfMissing((v) => !v)}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-3 rounded-2xl ${
+                  callIfMissing ? 'bg-[#FDE000]' : 'bg-slate-50 border border-slate-200'
+                }`}
+              >
                 <Phone size={18} className="text-slate-900" />
                 <span className="text-sm font-medium text-slate-900">
-                  Позвонить, если чего-то нет
+                  {callIfMissing ? 'Позвонить, если чего-то нет' : 'Не звонить'}
                 </span>
               </button>
             </div>
@@ -687,27 +731,51 @@ const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose }) 
           <div className="space-y-3">
             <h3 className="font-bold text-slate-900 text-lg">Способы оплаты</h3>
             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-              <div className="min-w-[140px] px-3 py-3 bg-white rounded-2xl border-2 border-slate-900 shadow-sm flex flex-col justify-between">
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentIndex(0)}
+                className={`min-w-[140px] px-3 py-3 rounded-2xl flex flex-col justify-between border ${
+                  selectedPaymentIndex === 0
+                    ? 'bg-white border-2 border-slate-900 shadow-sm'
+                    : 'bg-slate-50 border-slate-200'
+                }`}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-7 h-7 rounded-full bg-slate-900" />
                   <span className="text-[10px] font-semibold text-slate-600">MIR</span>
                 </div>
                 <span className="text-sm font-semibold text-slate-900">· 5828</span>
-              </div>
-              <div className="min-w-[140px] px-3 py-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between">
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentIndex(1)}
+                className={`min-w-[140px] px-3 py-3 rounded-2xl flex flex-col justify-between border ${
+                  selectedPaymentIndex === 1
+                    ? 'bg-white border-2 border-slate-900 shadow-sm'
+                    : 'bg-slate-50 border-slate-200'
+                }`}
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <CreditCard size={16} className="text-slate-700" />
                   <span className="text-xs font-semibold text-slate-800">Я.Карта</span>
                 </div>
                 <span className="text-xs text-slate-500">Открыть &gt;</span>
-              </div>
-              <div className="min-w-[140px] px-3 py-3 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between">
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedPaymentIndex(2)}
+                className={`min-w-[140px] px-3 py-3 rounded-2xl flex flex-col justify-between border ${
+                  selectedPaymentIndex === 2
+                    ? 'bg-white border-2 border-slate-900 shadow-sm'
+                    : 'bg-slate-50 border-slate-200'
+                }`}
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <CreditCard size={16} className="text-slate-700" />
                   <span className="text-xs font-semibold text-slate-800">MIR · 9039</span>
                 </div>
                 <span className="text-xs text-slate-500">Добавить</span>
-              </div>
+              </button>
             </div>
           </div>
 
@@ -718,18 +786,23 @@ const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose }) 
               Курьер получит всю сумму ваших чаевых
             </p>
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-              {['Без чаевых', '3% 48₽', '5% 79₽', '10% 157₽', 'Другое'].map((label, idx) => (
-                <button
-                  key={label}
-                  className={`px-3 py-2 rounded-full text-sm border ${
-                    idx === 0
-                      ? 'border-slate-900 bg-white font-semibold'
-                      : 'border-slate-200 bg-slate-50 text-slate-700'
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
+              {['Без чаевых', '3% 48₽', '5% 79₽', '10% 157₽', 'Другое'].map((label, idx) => {
+                const isActive = selectedTipIndex === idx;
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => setSelectedTipIndex(idx)}
+                    className={`px-3 py-2 rounded-full text-sm border transition-colors ${
+                      isActive
+                        ? 'border-slate-900 bg-white font-semibold'
+                        : 'border-slate-200 bg-slate-50 text-slate-700'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -737,27 +810,50 @@ const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose }) 
           <div className="space-y-2">
             <h3 className="font-bold text-slate-900 text-lg">Промокоды</h3>
             <div className="w-full h-px bg-slate-200" />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-slate-900 flex items-center justify-center">
-                  <Percent size={14} className="text-[#FDE000]" />
-                </div>
-                <span className="text-sm font-mono tracking-tight text-slate-900">
-                  LAVKA04YYH6QGTVKQ8JA
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
+                <Percent size={16} className="text-[#FDE000]" />
+              </div>
+              <input
+                type="text"
+                value={promo}
+                onChange={(e) => {
+                  setPromo(e.target.value.toUpperCase());
+                  setPromoApplied(false);
+                }}
+                className="flex-1 bg-slate-50 rounded-xl px-3 py-2 text-sm font-mono tracking-tight text-slate-900 outline-none border border-slate-200"
+                placeholder="Введите промокод"
+              />
+              <button
+                type="button"
+                onClick={() => setPromoApplied(promo.trim().length > 0)}
+                className="px-3 py-2 text-sm font-semibold text-slate-900 bg-[#FDE000] rounded-xl whitespace-nowrap"
+              >
+                Применить
+              </button>
+            </div>
+            {promoApplied && (
+              <div className="flex items-center justify-between text-xs text-slate-500">
+                <span>Скидка по промокоду</span>
+                <span className="text-red-500 font-semibold">
+                  −{discountAmount.toFixed(0)}₽
                 </span>
               </div>
-              <span className="text-sm font-semibold text-red-500">−269,75₽</span>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Нижняя кнопка оплаты */}
         <div className="px-4 pt-2">
-          <button className="w-full bg-[#FDE000] active:bg-yellow-400 text-black font-bold py-4 rounded-2xl text-lg shadow-lg shadow-yellow-400/40 transition-all transform active:scale-[0.98]">
+          <button
+            type="button"
+            onClick={onPay}
+            className="w-full bg-[#FDE000] active:bg-yellow-400 text-black font-bold py-4 rounded-2xl text-lg shadow-lg shadow-yellow-400/40 transition-all transform active:scale-[0.98]"
+          >
             Оплатить {totalPrice.toLocaleString('ru-RU')} ₽
           </button>
           <p className="mt-1 text-center text-xs text-slate-500 line-through">
-            {(totalPrice * 1.4).toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
+            {rawTotal.toLocaleString('ru-RU', { maximumFractionDigits: 0 })} ₽
           </p>
         </div>
       </div>
@@ -816,6 +912,7 @@ export default function App() {
   const [selectedDays, setSelectedDays] = useState(3);
   const allowedDays = [3, 7, 14, 30];
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [isThankYouVisible, setIsThankYouVisible] = useState(false);
 
   /** @type {DietPlan} */
   const selectedDietPlan = useMemo(() => {
@@ -1001,7 +1098,22 @@ export default function App() {
           selectedMealCount={selectedMealCount}
           selectedDays={selectedDays}
           onClose={() => setIsPaymentOpen(false)}
+          onPay={() => {
+            setIsPaymentOpen(false);
+            setIsThankYouVisible(true);
+          }}
         />
+      )}
+
+      {/* Экран благодарности */}
+      {isThankYouVisible && (
+        <button
+          type="button"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 text-white text-sm"
+          onClick={() => setIsThankYouVisible(false)}
+        >
+          Спасибо!
+        </button>
       )}
     </div>
   );
