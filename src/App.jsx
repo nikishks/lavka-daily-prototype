@@ -55,7 +55,7 @@ const MOCK_DATA = {
       fat: 22,
       carbs: 32,
       weight: 180,
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/101-syrniki.jpg',
       rationIds: ['normal', 'sport', 'vegan'] 
     },
     {
@@ -67,7 +67,7 @@ const MOCK_DATA = {
       fat: 8,
       carbs: 28,
       weight: 250,
-      image: 'https://images.unsplash.com/photo-1547592166-23acbe3a624b?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/102-kurinyj-sup.jpg',
       rationIds: ['normal', 'lowcal']
     },
     {
@@ -79,7 +79,7 @@ const MOCK_DATA = {
       fat: 28,
       carbs: 38,
       weight: 180,
-      image: 'https://images.unsplash.com/photo-1467003909585-2f8a7270028d?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/103-stejk-losos.jpg',
       rationIds: ['normal', 'lowcal', 'sport']
     },
     {
@@ -91,7 +91,7 @@ const MOCK_DATA = {
       fat: 32,
       carbs: 58,
       weight: 300,
-      image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/104-kotlety.jpg',
       rationIds: ['normal', 'sport']
     },
     {
@@ -103,7 +103,7 @@ const MOCK_DATA = {
       fat: 24,
       carbs: 38,
       weight: 220,
-      image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/105-bowl-avokado.jpg',
       rationIds: ['vegan', 'lowcal']
     }
   ],
@@ -117,7 +117,7 @@ const MOCK_DATA = {
       fat: 24,
       carbs: 18,
       weight: 200,
-      image: 'https://images.unsplash.com/photo-1613564834361-1e5c8b8b5e5e?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/201-omlet.jpg',
       rationIds: ['normal', 'sport', 'lowcal']
     },
     {
@@ -129,7 +129,7 @@ const MOCK_DATA = {
       fat: 12,
       carbs: 32,
       weight: 280,
-      image: 'https://images.unsplash.com/photo-1547592166-23acbe3a624b?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/202-borshch.jpg',
       rationIds: ['normal', 'sport']
     },
     {
@@ -141,7 +141,7 @@ const MOCK_DATA = {
       fat: 15,
       carbs: 48,
       weight: 250,
-      image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/203-grechka.jpg',
       rationIds: ['normal', 'sport', 'lowcal']
     },
     {
@@ -153,7 +153,7 @@ const MOCK_DATA = {
       fat: 35,
       carbs: 55,
       weight: 300,
-      image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/204-pasta.jpg',
       rationIds: ['normal', 'sport']
     },
     {
@@ -165,7 +165,7 @@ const MOCK_DATA = {
       fat: 18,
       carbs: 32,
       weight: 200,
-      image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/205-salat-kinoa.jpg',
       rationIds: ['vegan', 'lowcal']
     },
     {
@@ -177,7 +177,7 @@ const MOCK_DATA = {
       fat: 18,
       carbs: 42,
       weight: 220,
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80',
+      image: '/images/dishes/206-zapekanka.jpg',
       rationIds: ['normal', 'sport']
     }
   ],
@@ -484,16 +484,28 @@ const DaysPicker = ({ currentDays, allowedDays, onSelect }) => {
   );
 };
 
-// 6. MealCard (Карточка блюда без картинки)
+// 6. MealCard (Карточка блюда с картинкой)
 /**
  * @param {{dish: Meal}} props
  */
-const MealCard = ({ dish }) => (
-  <div className="bg-white rounded-[24px] p-3 shadow-sm h-full flex flex-col border border-blue-50 hover:shadow-lg transition-shadow">
-    {/* Вместо картинки — цветной блок с иконкой или инициалами */}
-    <div className="relative aspect-square mb-3 rounded-2xl overflow-hidden bg-blue-50 flex items-center justify-center">
-       <span className="text-4xl">🍽️</span>
-    </div>
+const MealCard = ({ dish }) => {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <div className="bg-white rounded-[24px] p-3 shadow-sm h-full flex flex-col border border-blue-50 hover:shadow-lg transition-shadow">
+      {/* Изображение блюда */}
+      <div className="relative aspect-square mb-3 rounded-2xl overflow-hidden bg-blue-50 flex items-center justify-center">
+        {imageError ? (
+          <span className="text-4xl">🍽️</span>
+        ) : (
+          <img 
+            src={dish.image} 
+            alt={dish.name}
+            className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
+          />
+        )}
+      </div>
     
     <div className="flex-1 flex flex-col">
       <div className="text-[10px] uppercase font-bold tracking-wider text-blue-400 mb-1">
@@ -506,8 +518,9 @@ const MealCard = ({ dish }) => (
         {dish.calories} ккал · {dish.weight} г
       </div>
     </div>
-  </div>
-);
+    </div>
+  );
+};
 
 
 // 7. FAQ Component (свернутый по умолчанию)
