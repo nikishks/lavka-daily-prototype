@@ -740,8 +740,7 @@ const PaymentSheet = ({ totalPrice, selectedMealCount, selectedDays, onClose, on
                     : 'bg-slate-50 border-slate-200'
                 }`}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-7 h-7 rounded-full bg-slate-900" />
+                <div className="flex items-center justify-end mb-3">
                   <span className="text-[10px] font-semibold text-slate-600">MIR</span>
                 </div>
                 <span className="text-sm font-semibold text-slate-900">· 5828</span>
