@@ -185,27 +185,27 @@ const MOCK_DATA = {
     {
       id: 1,
       question: 'Как происходит доставка?',
-      answer: 'Доставка происходит раз в три дня с 6:00 до 12:00, в любой удобный интервал.'
+      answer: 'Доставка происходит раз в три дня с 6:00 до 12:00, в любой удобный интервал. Доставка бесплатная при заказе от 2000₽.'
     },
     {
       id: 2,
       question: 'Можно ли изменить состав рациона?',
-      answer: 'Да, вы можете настроить рацион под свои предпочтения: количество блюд и тип питания.'
+      answer: 'Да, вы можете настроить рацион под свои предпочтения. Выбирайте количество блюд и тип питания (обычный, спорт, веган, низкокалорийный).'
     },
     {
       id: 3,
       question: 'Как часто обновляется меню?',
-      answer: 'Меню обновляется ежедневно. Мы предлагаем разнообразные блюда, чтобы вам они не надоедали.'
+      answer: 'Меню обновляется ежедневно. Мы предлагаем разнообразные блюда, чтобы вы не уставали от однообразия.'
     },
     {
       id: 4,
       question: 'Можно ли отменить заказ?',
-      answer: 'Да, вы можете отменить заказ до 18:00 дня, предшествующего дню доставки, сделать это можно на странице заказа в Лавке.'
+      answer: 'Да, вы можете отменить заказ до 18:00 дня, предшествующего дню доставки. Отмена доступна в личном кабинете или по телефону поддержки.'
     },
     {
       id: 5,
       question: 'Как хранить блюда?',
-      answer: 'Все блюда упакованы в герметичные контейнеры и могут храниться в холодильнике до 5 дней!'
+      answer: 'Все блюда упакованы в герметичные контейнеры и могут храниться в холодильнике до 3 дней. Перед употреблением разогрейте в микроволновке или на плите.'
     }
   ],
   deliveryZones: [
@@ -260,28 +260,80 @@ const Logo = ({ size = 32 }) => (
   </svg>
 );
 
-// 1. TopNavBar (Верхняя панель с лого, водяным знаком и профилем)
-const TopNavBar = () => (
-  <div className="sticky top-0 z-50 bg-[#F0F9FF]/95 backdrop-blur-sm px-4 py-2 flex flex-col items-center justify-center shadow-sm border-b border-blue-100 relative">
-    
-    {/* Watermark - Добавлено по запросу */}
-    <span className="text-[10px] text-gray-400 font-medium mb-1">
-      built by nikishks for non-commercial use
-    </span>
+// 1. TopNavBar (Верхняя панель с лого и профилем + меню пользователя)
+const TopNavBar = () => {
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-    {/* Logo Centered */}
-    <div className="flex items-center gap-2">
-      <span className="font-bold text-slate-800 text-xl tracking-tight">Лавка</span>
-      <Logo size={36} />
-      <span className="font-bold text-slate-800 text-xl tracking-tight">Дейли</span>
+  const toggleUserMenu = () => {
+    setIsUserMenuOpen((prev) => !prev);
+  };
+
+  const closeUserMenu = () => {
+    setIsUserMenuOpen(false);
+  };
+
+  return (
+    <div className="sticky top-0 z-50 bg-[#F0F9FF]/95 backdrop-blur-sm px-4 py-3 flex items-center justify-center shadow-sm border-b border-blue-100 relative">
+      {/* Logo Centered */}
+      <div className="flex items-center gap-2">
+        <span className="font-bold text-slate-800 text-xl tracking-tight">Лавка</span>
+        <Logo size={40} />
+        <span className="font-bold text-slate-800 text-xl tracking-tight">Дейли</span>
+      </div>
+      
+      {/* Right Side Icons - Кнопка профиля */}
+      <button
+        onClick={toggleUserMenu}
+        className="absolute right-4 flex items-center justify-center bg-white/50 w-8 h-8 rounded-full text-slate-600 active:scale-90 transition-transform"
+      >
+        <User size={18} />
+      </button>
+
+      {/* Выпадающее меню пользователя */}
+      {isUserMenuOpen && (
+        <>
+          {/* Полупрозрачный фон для клика вне меню */}
+          <button
+            onClick={closeUserMenu}
+            className="fixed inset-0 z-40 bg-black/10 cursor-default"
+          />
+
+          <div className="absolute right-4 top-12 z-50 w-56 bg-white rounded-2xl shadow-xl border border-blue-100 py-2">
+            <div className="px-4 py-2 border-b border-blue-50">
+              <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">Аккаунт</p>
+              <p className="text-sm font-semibold text-slate-800">Иван Иванов</p>
+              <p className="text-xs text-slate-500">+7 999 123-45-67</p>
+            </div>
+
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 flex items-center gap-2"
+            >
+              <span>Профиль</span>
+            </button>
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 flex items-center gap-2"
+            >
+              <span>Мои заказы</span>
+            </button>
+            <button
+              className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 flex items-center gap-2"
+            >
+              <span>Способы оплаты</span>
+            </button>
+
+            <div className="border-t border-blue-50 mt-1 pt-1">
+              <button
+                className="w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-red-50"
+              >
+                Выйти
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
-    
-    {/* Right Side Icons - Кнопка профиля (Центрирована вертикально относительно контейнера) */}
-    <button className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center bg-white/50 w-8 h-8 rounded-full text-slate-600 active:scale-90 transition-transform">
-      <User size={18} />
-    </button>
-  </div>
-);
+  );
+};
 
 // 2. QuickActionsBar (Панель быстрых действий)
 /**
@@ -335,8 +387,11 @@ const DietPlanSelector = ({ selectedId, onSelect, dynamicCalories }) => {
       <div className="flex flex-col gap-3 h-[220px] overflow-y-auto snap-y snap-mandatory no-scrollbar rounded-2xl">
         {MOCK_DATA.dietPlans.map((plan) => {
           const isSelected = selectedId === plan.id;
-          // Используем базовые калории из плана
+          
+          // ИСПРАВЛЕНИЕ: Всегда используем базовые калории из плана.
+          // Это убирает "скачок" цифр при клике.
           const displayCalories = plan.macros.calories;
+          
           return (
             <div 
               key={plan.id}
